@@ -83,24 +83,25 @@ my $java_bin = 'java';
 my $min_length;
 
 my $result = GetOptions('version' => \$version,
-						'help' => \$help,
-						'quiet' => \$quiet,
-						'nogroup' => \$nogroup,
-						'expgroup' => \$expgroup,
-						'outdir=s' => \$outdir,
-						'extract!' => \$unzip,
-						'format=s' => \$format,
-						'threads=i' => \$threads,
-						'kmers=i' => \$kmer_size,
-						'casava' => \$casava,
-						'nano' => \$nano,
-						'nofilter' => \$nofilter,
-						'contaminants=s' => \$contaminant,
-						'adapters=s' => \$adapter,
-						'limits=s' => \$limits,
-						'dir=s' => \$temp_directory,
-						'java=s' => \$java_bin,
-						'min_length=i' => \$min_length,
+    'help'                        => \$help,
+    'quiet'                       => \$quiet,
+    'nogroup'                     => \$nogroup,
+    'expgroup'                    => \$expgroup,
+    'outdir=s'                    => \$outdir,
+    'extract!'                    => \$unzip,
+    'format=s'                    => \$format,
+    'threads=i'                   => \$threads,
+    'kmers=i'                     => \$kmer_size,
+    'casava'                      => \$casava,
+    'nano'                        => \$nano,
+    'nofilter'                    => \$nofilter,
+    'contaminants=s'              => \$contaminant,
+    'adapters=s'                  => \$adapter,
+    'limits=s'                    => \$limits,
+    'dir=s'                       => \$temp_directory,
+    'java=s'                      => \$java_bin,
+    'min_length=i'                => \$min_length,
+    'total_mem_g=i'                 => \$total_mem_g,
 						 );
 
 # Check the simple stuff first
@@ -161,13 +162,19 @@ if ($threads) {
 	if ($threads < 1) {
 		die "Number of threads must be a positive integer";
 	}
-	
-	push @java_args ,"-Dfastqc.threads=$threads";
-	my $memory = 250 * $threads;
-	unshift @java_args,"-Xmx${memory}m";
+    push @java_args ,"-Dfastqc.threads=$threads";
+	if ($total_mem_g) {
+        unshift @java_args, "-Xmx${total_mem_g}g";
+    }else{
+        unshift @java_args,'-Xmx250m';
+    }
 }
 else {
-	unshift @java_args,'-Xmx250m';
+    if ($total_mem_g){
+        unshift @java_args, "-Xmx${total_mem_g}g"
+    }else{
+        unshift @java_args,'-Xmx250m';
+    }
 }
 
 if ($kmer_size) {
