@@ -101,8 +101,8 @@ my $result = GetOptions('version' => \$version,
     'dir=s'                       => \$temp_directory,
     'java=s'                      => \$java_bin,
     'min_length=i'                => \$min_length,
-    'total_mem_g=i'                 => \$total_mem_g,
-						 );
+    'total_mem_g=i'               => \$total_mem_g,
+);
 
 # Check the simple stuff first
 
