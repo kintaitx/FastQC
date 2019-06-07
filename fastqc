@@ -81,6 +81,7 @@ my $kmer_size;
 my $temp_directory;
 my $java_bin = 'java';
 my $min_length;
+my $total_mem_g;
 
 my $result = GetOptions('version' => \$version,
     'help'                        => \$help,
